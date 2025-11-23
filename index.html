@@ -105,25 +105,39 @@
 <script>
 function obliczMiarke() {
     const thetaDeg = parseFloat(document.getElementById("theta").value);
-    if (isNaN(thetaDeg) || thetaDeg <= 0 || thetaDeg >= 90) {
-        document.getElementById("result").innerHTML = "Błędny kąt!";
+    if (isNaN(thetaDeg) || thetaDeg < 10 || thetaDeg > 120) {
+        document.getElementById("result").innerHTML = "Kąt musi być między 10° a 120°";
         return;
     }
 
-    const L1 = 200; // mm
-    const L2 = 200; // mm (środkowy segment prosty)
-    const L3 = 200; // mm
+    const data = [
+        {angle: 10, mm: 1196},
+        {angle: 15, mm: 1195},
+        {angle: 30, mm: 1180},
+        {angle: 35, mm: 1174},
+        {angle: 45, mm: 1158},
+        {angle: 60, mm: 1126},
+        {angle: 75, mm: 1088},
+        {angle: 80, mm: 1074},
+        {angle: 90, mm: 1043},
+        {angle: 120, mm: 942}
+    ];
 
-    const theta = thetaDeg * Math.PI / 180;
+    // znajdź dwa najbliższe punkty do interpolacji/ekstrapolacji
+    let lower = data[0], upper = data[data.length - 1];
+    for (let i = 0; i < data.length - 1; i++) {
+        if (thetaDeg >= data[i].angle && thetaDeg <= data[i+1].angle) {
+            lower = data[i];
+            upper = data[i+1];
+            break;
+        }
+    }
 
-    // Dokładny wzór analityczny na kąt przegięcia α
-    const alpha = theta + Math.atan((L2 * Math.tan(theta)) / (L1 + L3));
-
-    // Odległość ustawienia początkowego
-    const ustawienie = L1 * Math.cos(alpha) + L2;
+    // interpolacja liniowa
+    const mm = lower.mm + (upper.mm - lower.mm) * (thetaDeg - lower.angle) / (upper.angle - lower.angle);
 
     document.getElementById("result").innerHTML =
-        `Ustaw początek miarki: ${ustawienie.toFixed(0)} mm`;
+        `Ustaw początek miarki: ${mm.toFixed(0)} mm`;
 }
 </script>
 
