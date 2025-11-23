@@ -123,7 +123,7 @@ function obliczMiarke() {
         {angle: 120, mm: 942}
     ];
 
-    // znajdź dwa najbliższe punkty do interpolacji/ekstrapolacji
+    // znajdź dwa punkty do interpolacji/ekstrapolacji
     let lower = data[0], upper = data[data.length - 1];
     for (let i = 0; i < data.length - 1; i++) {
         if (thetaDeg >= data[i].angle && thetaDeg <= data[i+1].angle) {
