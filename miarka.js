@@ -1,31 +1,22 @@
-function obliczKat() {
-    let L1 = parseFloat(document.getElementById("L1").value);
-    let L2 = parseFloat(document.getElementById("L2").value);
-    let L3 = parseFloat(document.getElementById("L3").value);
-    let thetaDeg = parseFloat(document.getElementById("theta").value);
-
-    let theta = thetaDeg * Math.PI / 180;
-
-    // zakładamy α2 = 0, α1 = α3 = α, szukamy α numerycznie
-    let alpha = 0;
-    let step = 0.001;
-    let found = false;
-
-    for (let i = -Math.PI/4; i <= Math.PI/4; i += step) {
-        let x = L1 * Math.cos(i) + L2 + L3 * Math.cos(i);
-        let y = L1 * Math.sin(i) + L3 * Math.sin(i);
-        let angle = Math.atan2(y, x);
-        if (Math.abs(angle - theta) < 0.001) {
-            alpha = i;
-            found = true;
-            break;
-        }
+function obliczMiarke() {
+    const thetaDeg = parseFloat(document.getElementById("theta").value);
+    if (isNaN(thetaDeg) || thetaDeg <= 0 || thetaDeg >= 90) {
+        document.getElementById("result").innerHTML = "Błędny kąt!";
+        return;
     }
 
-    let resultDiv = document.getElementById("result");
-    if (found) {
-        resultDiv.innerHTML = `Kąt przegięcia segmentów 1 i 3: ${ (alpha*180/Math.PI).toFixed(2) }°`;
-    } else {
-        resultDiv.innerHTML = "Nie udało się znaleźć rozwiązania.";
-    }
+    const L1 = 200; // mm
+    const L2 = 200; // mm (środkowy segment prosty)
+    const L3 = 200; // mm
+
+    const theta = thetaDeg * Math.PI / 180;
+
+    // Dokładny wzór analityczny na kąt przegięcia α
+    const alpha = theta + Math.atan((L2 * Math.tan(theta)) / (L1 + L3));
+
+    // Odległość ustawienia początkowego
+    const ustawienie = L1 * Math.cos(alpha) + L2;
+
+    document.getElementById("result").innerHTML =
+        `Ustaw początek miarki: ${ustawienie.toFixed(0)} mm`;
 }
