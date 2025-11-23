@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miarka - Kalkulator Kąta</title>
+<style>
+    body {
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: #f2f2f2;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        width: 340px;
+        text-align: center;
+    }
+
+    .container h1 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .row {
+        margin-bottom: 15px;
+    }
+
+    input {
+        width: 80px;
+        padding: 8px;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 12px;
+        width: 100%;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #45a049;
+    }
+
+    .result {
+        margin-top: 20px;
+        background: #dff5d8;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ustawienie miarki</h1>
+
+    <div class="row">
+        <label>Długość segmentu 1 (m): </label>
+        <input id="L1" type="number" value="0.2" step="0.01">
+    </div>
+    <div class="row">
+        <label>Długość segmentu 2 (m): </label>
+        <input id="L2" type="number" value="0.2" step="0.01">
+    </div>
+    <div class="row">
+        <label>Długość segmentu 3 (m): </label>
+        <input id="L3" type="number" value="0.2" step="0.01">
+    </div>
+    <div class="row">
+        <label>Żądany kąt końcowy (°): </label>
+        <input id="theta" type="number" value="45" step="1">
+    </div>
+
+    <button onclick="obliczKat()">OBLICZ</button>
+
+    <div id="result" class="result">
+        Kąt przegięcia segmentów: —
+    </div>
+</div>
+
+<script src="miarka.js"></script>
+
+</body>
+</html>
