@@ -3,141 +3,196 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Miarka - Kalkulator Kąta</title>
+<title>Kalkulator Miarki 1m i 2m</title>
+
 <style>
     body {
         background: #ffffff;
         font-family: Arial, sans-serif;
         margin: 0;
+        padding: 20px;
         display: flex;
         justify-content: center;
-        align-items: center;
-        height: 100vh;
     }
 
-    .calc-container {
-        background: #f2f2f2;
-        padding: 25px;
-        border-radius: 20px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-        width: 340px;
+    .container {
+        max-width: 800px;
+        width: 100%;
     }
 
     .title {
         text-align: center;
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
-        margin-bottom: 20px;
-        color: #333333;
+        margin-bottom: 25px;
+        color: #003366;
+    }
+
+    .calc-box {
+        background: #f0f4ff;
+        border: 2px solid #aac6ff;
+        padding: 20px;
+        border-radius: 18px;
+        box-shadow: 0 4px 12px rgba(0,0,50,0.15);
+        margin-bottom: 25px;
+    }
+
+    .subtitle {
+        font-size: 22px;
+        font-weight: bold;
+        color: #004a99;
+        margin-bottom: 15px;
+        text-align: center;
     }
 
     .row {
         display: flex;
         align-items: center;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
 
     .label {
         flex: 1;
-        background: #d0d0d0;
+        font-weight: bold;
         padding: 10px;
+        background: #dce7ff;
         border-radius: 10px;
         text-align: center;
-        font-weight: bold;
         margin-right: 10px;
-        color: #222;
     }
 
     .input {
         flex: 1;
         padding: 10px;
         border-radius: 10px;
-        border: 2px solid #ccc;
+        border: 2px solid #99bbff;
         text-align: center;
         font-size: 16px;
     }
 
-    .result-box {
-        background: #dff5d8;
-        padding: 15px;
-        margin-top: 20px;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
-        text-align: center;
-    }
-
     .button {
-        margin-top: 20px;
         width: 100%;
+        margin-top: 15px;
         padding: 12px;
-        background: #4caf50;
-        color: #fff;
-        font-size: 18px;
+        background: #0066cc;
+        color: white;
         border: none;
         border-radius: 12px;
+        font-size: 18px;
         cursor: pointer;
         font-weight: bold;
     }
 
     .button:hover {
-        background: #45a049;
+        background: #0055aa;
+    }
+
+    .result {
+        margin-top: 15px;
+        padding: 15px;
+        background: #dff0ff;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        border: 1px solid #99bbff;
     }
 </style>
 </head>
+
 <body>
+<div class="container">
 
-<div class="calc-container">
-    <div class="title">Ustawienie miarki</div>
+    <div class="title">Kalkulator ustawienia miarki</div>
 
-    <div class="row">
-        <div class="label">Żądany kąt (°)</div>
-        <input id="theta" class="input" type="number" placeholder="np. 45">
+    <!-- ------------------ 1 METR ------------------ -->
+    <div class="calc-box">
+        <div class="subtitle">Miarka 1 metr</div>
+
+        <div class="row">
+            <div class="label">Kąt (°)</div>
+            <input id="angle1" class="input" type="number" placeholder="np. 45">
+        </div>
+
+        <button class="button" onclick="calcMeter(1)">OBLICZ</button>
+
+        <div id="result1" class="result">Wynik: — mm</div>
     </div>
 
-    <button class="button" onclick="obliczMiarke()">OBLICZ</button>
+    <!-- ------------------ 2 METRY ------------------ -->
+    <div class="calc-box">
+        <div class="subtitle">Miarka 2 metry</div>
 
-    <div id="result" class="result-box">
-        Ustaw początek miarki: — mm
+        <div class="row">
+            <div class="label">Kąt (°)</div>
+            <input id="angle2" class="input" type="number" placeholder="np. 45">
+        </div>
+
+        <button class="button" onclick="calcMeter(2)">OBLICZ</button>
+
+        <div id="result2" class="result">Wynik: — mm</div>
     </div>
+
 </div>
 
 <script>
-function obliczMiarke() {
-    const thetaDeg = parseFloat(document.getElementById("theta").value);
-    if (isNaN(thetaDeg) || thetaDeg < 10 || thetaDeg > 120) {
-        document.getElementById("result").innerHTML = "Kąt musi być między 10° a 120°";
+// Dane przepisane z Twojej książki:
+const TABLE = [
+    {a: 5,  m1: 999,  m2: 1197},
+    {a: 10, m1: 998,  m2: 1196},
+    {a: 15, m1: 995,  m2: 1195},
+    {a: 20, m1: 992,  m2: 1191},
+    {a: 25, m1: 988,  m2: 1186},
+    {a: 30, m1: 983,  m2: 1180},
+    {a: 35, m1: 977,  m2: 1174},
+    {a: 40, m1: 971,  m2: 1166},
+    {a: 45, m1: 964,  m2: 1158},
+    {a: 50, m1: 956,  m2: 1148},
+    {a: 55, m1: 948,  m2: 1138},
+    {a: 60, m1: 938,  m2: 1126},
+    {a: 65, m1: 922,  m2: 1114},
+    {a: 70, m1: 917,  m2: 1102},
+    {a: 75, m1: 906,  m2: 1088},
+    {a: 80, m1: 894,  m2: 1074},
+    {a: 85, m1: 881,  m2: 1059},
+    {a: 90, m1: 868,  m2: 1043},
+    {a: 95, m1: 855,  m2: 1027},
+    {a: 100, m1: 842, m2: 1011},
+    {a: 105, m1: 827, m2: 994},
+    {a: 110, m1: 814, m2: 977},
+    {a: 115, m1: 799, m2: 960},
+    {a: 120, m1: 784, m2: 942}
+];
+
+// interpolacja liniowa
+function interpolate(angle, meter) {
+    let col = meter === 1 ? "m1" : "m2";
+
+    for (let i = 0; i < TABLE.length - 1; i++) {
+        if (angle >= TABLE[i].a && angle <= TABLE[i+1].a) {
+
+            let a1 = TABLE[i].a;
+            let a2 = TABLE[i+1].a;
+            let v1 = TABLE[i][col];
+            let v2 = TABLE[i+1][col];
+
+            return v1 + (v2 - v1) * (angle - a1) / (a2 - a1);
+        }
+    }
+    return meter === 1 ? TABLE[TABLE.length - 1].m1 : TABLE[TABLE.length - 1].m2;
+}
+
+function calcMeter(meter) {
+    const angle = parseFloat(document.getElementById("angle" + meter).value);
+    const resultBox = document.getElementById("result" + meter);
+
+    if (isNaN(angle) || angle < 5 || angle > 120) {
+        resultBox.innerHTML = "Podaj kąt od 5° do 120°";
         return;
     }
 
-    const data = [
-        {angle: 10, mm: 1196},
-        {angle: 15, mm: 1195},
-        {angle: 30, mm: 1180},
-        {angle: 35, mm: 1174},
-        {angle: 45, mm: 1158},
-        {angle: 60, mm: 1126},
-        {angle: 75, mm: 1088},
-        {angle: 80, mm: 1074},
-        {angle: 90, mm: 1043},
-        {angle: 120, mm: 942}
-    ];
-
-    // znajdź dwa punkty do interpolacji/ekstrapolacji
-    let lower = data[0], upper = data[data.length - 1];
-    for (let i = 0; i < data.length - 1; i++) {
-        if (thetaDeg >= data[i].angle && thetaDeg <= data[i+1].angle) {
-            lower = data[i];
-            upper = data[i+1];
-            break;
-        }
-    }
-
-    // interpolacja liniowa
-    const mm = lower.mm + (upper.mm - lower.mm) * (thetaDeg - lower.angle) / (upper.angle - lower.angle);
-
-    document.getElementById("result").innerHTML =
-        `Ustaw początek miarki: ${mm.toFixed(0)} mm`;
+    const mm = interpolate(angle, meter);
+    resultBox.innerHTML = "Wynik: " + mm.toFixed(0) + " mm";
 }
 </script>
 
